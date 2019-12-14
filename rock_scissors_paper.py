@@ -1,23 +1,22 @@
 import numpy as np
+from random import randint
 
 
-def play(player1, player2):
+def play(shape1, shape2):
     """
     Play Rock–scissors–paper.
 
     Parameters
     ----------
-    player1 : {'rock', 'scissors', 'paper'}
-        Player 1 hand shape.
-    player2 : {'rock', 'scissors', 'paper'}
-        Player 2 hand shape.
+    shape1 : {'rock', 'scissors', 'paper'}
+    shape2 : {'rock', 'scissors', 'paper'}
 
     Returns
     -------
     result : {1, 0, -1}
-        :1: Player 1 win
+        :1: shape1 win
         :0: Draw
-        :-1: Player 1 lose
+        :-1: shape1 lose
         
 
     Examples
@@ -31,8 +30,17 @@ def play(player1, player2):
 
     """
     
-    shape = {'rock':(1 ,0, 0), 'scissors':(0, 1, 0), 'paper':(0, 0, 1)}
-    player1, player2 = shape[player1], shape[player2]
-    re_array = np.cross(player1, player2)
+    to_one_hot = {'rock':(1, 0, 0), 'scissors':(0, 1, 0), 'paper':(0, 0, 1)}
+    shape1, shape2 = to_one_hot[shape1], to_one_hot[shape2]
+    re_array = np.cross(shape1, shape2)
 
     return re_array @ np.ones(3, dtype=int)
+
+
+
+index = int(input("choose shape\n0: rock\n1: scissors\n2: paper\n"))
+shape = ('rock', 'scissors', 'paper')[index]
+com1 = ('rock', 'scissors', 'paper')[randint(0, 2)]
+print(f"you: {shape}")
+print(f"com: {com1}")
+print(play(shape, com1))
