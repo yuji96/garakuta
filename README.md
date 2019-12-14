@@ -1,1 +1,3 @@
-# janken_tournament
+# minigames
+## janken
+## ox game
