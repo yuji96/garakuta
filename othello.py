@@ -1,13 +1,18 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Stone:
-    def __init__(self, color:bool, position:tuple):
-        self.color = color
-        self.position = position
+    color:bool
+    position:tuple
+
     def reverse(self):
         self.color = not self.color
 
+@dataclass
 class Board:
-    def __init__(self):
-        self.stones = []
+    stones:list = []
+
     def set_(self, stone:Stone):
         
         self.stones.append(stone)
