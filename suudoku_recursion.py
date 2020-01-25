@@ -1,40 +1,4 @@
 import numpy as np
-from time import sleep
-
-# 問題設定
-table = [[0, 1, 0, 0, 0, 6, 0, 0, 4],
-         [0, 0, 6, 0, 0, 0, 2, 5, 0],
-         [3, 0, 0, 8, 0, 0, 0, 0, 0],
-         [9, 0, 0, 7, 0, 0, 0, 3, 0],
-         [0, 0, 8, 0, 0, 0, 4, 0, 0],
-         [0, 2, 0, 0, 0, 9, 0, 0, 7],
-         [0, 0, 0, 0, 0, 2, 0, 0, 8],
-         [0, 4, 5, 0, 0, 0, 6, 0, 0],
-         [7, 0, 0, 3, 0, 0, 0, 9, 0]]
-
-ans =   [[2, 1, 7, 5, 9, 6, 3, 8, 4],
-         [8, 9, 6, 4, 3, 7, 2, 5, 1],
-         [3, 5, 4, 8, 2, 1, 9, 7, 6],
-         [9, 6, 1, 7, 4, 5, 8, 3, 2],
-         [5, 7, 8, 2, 1, 3, 4, 6, 9],
-         [4, 2, 3, 6, 8, 9, 5, 1, 7],
-         [6, 3, 9, 1, 5, 2, 7, 4, 8],
-         [1, 4, 5, 9, 7, 8, 6, 2, 3],
-         [7, 8, 2, 3, 6, 4, 1, 9, 5]]
-
-
-# table =    [[0, 0, 5, 4, 0, 7, 8, 1, 0],
-#             [0, 0, 0, 1, 0, 2, 7, 0, 0],
-#             [0, 0, 1, 0, 5, 6, 0, 0, 2],
-#             [1, 0, 7, 0, 0, 0, 4, 0, 8],
-#             [4, 0, 2, 0, 0, 1, 0, 0, 9],
-#             [8, 0, 6, 0, 0, 0, 2, 0, 1],
-#             [6, 0, 0, 0, 1, 0, 0, 0, 0],
-#             [0, 1, 3, 9, 0, 8, 0, 0, 0],
-#             [0, 0, 4, 7, 0, 3, 1, 0, 0]]
-
-table = np.array(table)
-ans = np.array(ans)
 
 
 def fill(table_flat):
@@ -62,16 +26,14 @@ def fill(table_flat):
             for new_val in fillable_vals:
 
                 table_flat[tmp_i] = new_val
-                print(f"\033[9A\r{table_flat.reshape(9, 9)}")
 
-                if table_flat.all():
-                    return table_flat.reshape(9, 9)
-                else:
-                    if fill(table_flat) is None:
-                        continue
-
-            table_flat[tmp_i] = 0
-            break
+                if fill(table_flat) is not None:
+                    break
+            else:
+                table_flat[tmp_i] = 0
+                break
+    else:
+        return table_flat.reshape(9, 9)
 
 
 def fillable(table, index, value):
@@ -88,6 +50,7 @@ def fillable(table, index, value):
     return fillable_in_row and fillable_in_col and fillable_in_block
 
 
-# print(table)
-print("\n"*9)
-print(fill(table.flatten()))
+if __name__ == "__main__":
+    table = []
+    table = np.array(table).flatten()
+    print(fill(table))
