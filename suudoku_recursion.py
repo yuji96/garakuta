@@ -1,4 +1,3 @@
-from pprint import pprint
 import numpy as np
 
 # 問題設定
@@ -23,18 +22,15 @@ table = [[0, 1, 0, 0, 0, 6, 0, 0, 4],
 #             [0, 0, 4, 7, 0, 3, 1, 0, 0]]
 
 table = np.array(table)
-is_filled_array = table.flatten().astype(np.bool)
 
 
-def fill(table_flat, is_filled_array):
+def fill(table_flat):
     """未入力の要素に仮定を代入する,
 
     Parameters
     -------
         table_flat : np.ndarray of int
             計算中の行列。1D-array
-        is_filled_array : np.ndarray of np.bool
-            計算前の行列を`np.bool`に変換した行列。
 
     Returns
     -------
@@ -42,16 +38,22 @@ def fill(table_flat, is_filled_array):
             仮定がが代入された行列。shape = (9, 9)
     """
 
-    for tmp_i, (tmp_value, is_filled) in enumerate(zip(table_flat, is_filled_array)):
+    for tmp_i, tmp_val in enumerate(table_flat):
 
-        if not is_filled:
-            for new_value in range(tmp_value, 10):
+        if tmp_val == 0:
 
-                if fillable(table_flat.reshape(9, 9), tmp_i, new_value):
-                    table_flat[tmp_i] = new_value
-                    fill(table_flat, is_filled_array)
+            fillable_vals = [val
+                             for val in range(tmp_val + 1, 10)
+                             if fillable(table_flat.reshape(9, 9), tmp_i, val)]
 
-    return table_flat.reshape(9, 9)
+            for new_val in fillable_vals:
+                table_flat[tmp_i] = new_val
+
+                print()
+                print(table_flat.reshape(9, 9))
+
+                return table_flat.reshape(9, 9) if table_flat.all() else fill(table_flat)
+            break
 
 
 def fillable(table, index, value):
@@ -61,13 +63,12 @@ def fillable(table, index, value):
     fillable_in_row = value not in table[row, :]
     fillable_in_col = value not in table[:, col]
     fillable_in_block = value not in table[
-                                     (row // 3) * 3: (row // 3 + 1) * 3 - 1,
-                                     (col // 3) * 3: (col // 3 + 1) * 3 - 1,
+                                     (row // 3) * 3: (row // 3 + 1) * 3,
+                                     (col // 3) * 3: (col // 3 + 1) * 3,
                                      ]
 
     return fillable_in_row and fillable_in_col and fillable_in_block
 
 
 print(table)
-# fill(table.flatten())
-print(fill(table.flatten(), is_filled_array))
+print(fill(table.flatten()))
