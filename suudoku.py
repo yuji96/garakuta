@@ -1,114 +1,56 @@
-from pprint import pprint
 import numpy as np
-from collections import deque
 
 
+def fill(table_flat):
+    """未入力の要素に仮定を代入する,
 
-# 問題設定
-table =    [[0, 1, 0, 0, 0, 6, 0, 0, 4],
-            [0, 0, 6, 0, 0, 0, 2, 5, 0],
-            [3, 0, 0, 8, 0, 0, 0, 0, 0],
-            [9, 0, 0, 7, 0, 0, 0, 3, 0],
-            [0, 0, 8, 0, 0, 0, 4, 0, 0],
-            [0, 2, 0, 0, 0, 9, 0, 0, 7],
-            [0, 0, 0, 0, 0, 2, 0, 0, 8],
-            [0, 4, 5, 0, 0, 0, 6, 0, 0],
-            [7, 0, 0, 3, 0, 0, 0, 9, 0]]
+    Parameters
+    -------
+        table_flat : np.ndarray of int
+            計算中の行列。1D-array
 
-# table =    [[0, 0, 5, 4, 0, 7, 8, 1, 0],
-#             [0, 0, 0, 1, 0, 2, 7, 0, 0],
-#             [0, 0, 1, 0, 5, 6, 0, 0, 2],
-#             [1, 0, 7, 0, 0, 0, 4, 0, 8],
-#             [4, 0, 2, 0, 0, 1, 0, 0, 9],
-#             [8, 0, 6, 0, 0, 0, 2, 0, 1],
-#             [6, 0, 0, 0, 1, 0, 0, 0, 0],
-#             [0, 1, 3, 9, 0, 8, 0, 0, 0],
-#             [0, 0, 4, 7, 0, 3, 1, 0, 0]]
+    Returns
+    -------
+        np.ndarray of int
+            仮定がが代入された行列。shape = (9, 9)
+    """
 
+    for tmp_i, tmp_val in enumerate(table_flat):
 
-table_array = np.array(table)
+        if tmp_val == 0:
 
-for row in range(9):
-    for col in range(9):
-        temp = table[row][col]
-        table[row][col] = [temp] if temp else [i for i in range(1, 10)]
+            fillable_vals = [val
+                             for val in range(tmp_val + 1, 10)
+                             if fillable(table_flat.reshape(9, 9), tmp_i, val)]
 
+            for new_val in fillable_vals:
 
+                table_flat[tmp_i] = new_val
 
-
-def dedupe():
-    for row in range(9):
-        for col in range(9):
-            f = lambda x:x // 3 * 3
-            horizon  = table_array[row]
-            vertical = table_array[:, col]
-            block    = table_array[f(row) : f(row) + 3, f(col) : f(col) + 3]
-            default = np.hstack((horizon, vertical, block.reshape(1, 9)[0]))
-            temp = table[row][col]
-            if len(temp) > 1:
-                table[row][col] = [i for i in range(1, 10) if i not in default]
-            temp = table[row][col]
-            if len(temp) == 1:
-                table_array[row][col] = temp[0]
-
-def filling():
-    while True:
-        before = np.copy(table_array)
-        dedupe()
-        if np.array_equal(before, table_array):
-            break
-
-filling()
+                if fill(table_flat) is not None:
+                    break
+            else:
+                table_flat[tmp_i] = 0
+                break
+    else:
+        return table_flat.reshape(9, 9)
 
 
-def fill_single_in_low():
+def fillable(table, index, value):
+    row = index // 9
+    col = index % 9
 
-    def single_in_row(row):
-        """ Return : list """
-        elems = []
-        for inner_list in np.array(table)[row, :]:
-            elems += inner_list
-        for fixed in table_array[row, :]:
-            if fixed in elems:
-                elems.remove(fixed)
-        return [num for num in elems if elems.count(num) == 1]
+    fillable_in_row = value not in table[row, :]
+    fillable_in_col = value not in table[:, col]
+    fillable_in_block = value not in table[
+                                     (row // 3) * 3: (row // 3 + 1) * 3,
+                                     (col // 3) * 3: (col // 3 + 1) * 3,
+                                     ]
 
-    for row in range(9):
-        queue = deque(single_in_row(row))
-        for col, elems in enumerate(np.array(table)[row, :]):
-            for single in list(queue):
-                if single in elems:
-                    temp = queue.popleft()
-                    table_array[row][col] = temp
-                    table[row][col] = [temp]
-                    filling()
+    return fillable_in_row and fillable_in_col and fillable_in_block
 
 
-
-def single_in_col(col):
-    """ Return : list """
-    elems = []
-    for inner_list in np.array(table)[:, col]:
-        elems += inner_list
-    for fixed in table_array[:, col]:
-        if fixed in elems:
-            elems.remove(fixed)
-    return [num for num in elems if elems.count(num) == 1]
-
-fill_single_in_low()
-
-for col in range(9):
-    queue = deque(single_in_col(col))
-    for row, elems in enumerate(np.array(table)[:, col]):
-        for single in list(queue):
-            if single in elems:
-                temp = queue.popleft()
-                table_array[row][col] = temp
-                table[row][col] = [temp]
-                filling()
-
-fill_single_in_low()
-
-
-print(table_array)
-print(table)
+if __name__ == "__main__":
+    table = []
+    table = np.array(table).flatten()
+    print(fill(table))
