@@ -1,4 +1,3 @@
-import numpy as np
 def fillable(table, index, value):
     """計算中の行列において、正解だと仮定した値が数独の条件を満たしているか検証する。
 

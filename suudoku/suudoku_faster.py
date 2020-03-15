@@ -1,5 +1,6 @@
-import numpy as np
-from numba import njit, int64
+from numba import njit, int64, bool_
+
+
 @njit(bool_(int64[:, :], int64, int64))
 def fillable(table, index, value):
 
