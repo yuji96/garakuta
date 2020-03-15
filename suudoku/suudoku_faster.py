@@ -1,5 +1,21 @@
 import numpy as np
 from numba import njit, int64
+@njit(bool_(int64[:, :], int64, int64))
+def fillable(table, index, value):
+
+    row = index // 9
+    col = index % 9
+    block = lambda x: ((x // 3) * 3, (x // 3 + 1) * 3)
+
+    same_in_areas = False
+    for area in [
+        table[row, :], table[:, col],
+        table[block(row)[0]:block(row)[1], block(col)[0]:block(col)[1]].flatten()
+    ]:
+        for i in area:
+            same_in_areas |= (i == value)
+
+    return not same_in_areas
 
 
 @njit(int64[:, :](int64[::1]))
@@ -16,22 +32,6 @@ def fill(table_flat):
         np.ndarray of int
             仮定がが代入された行列。shape = (9, 9)
     """
-
-    def fillable(table, index, value):
-
-        row = index // 9
-        col = index % 9
-        block = lambda x: ((x // 3) * 3, (x // 3 + 1) * 3)
-
-        same_in_areas = False
-        for area in [
-            table[row, :], table[:, col],
-            table[block(row)[0]:block(row)[1], block(col)[0]:block(col)[1]].flatten()
-        ]:
-            for i in area:
-                same_in_areas += (i == value)
-
-        return not same_in_areas
 
     for tmp_i, tmp_val in enumerate(table_flat):
 
