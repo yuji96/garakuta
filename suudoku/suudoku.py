@@ -47,19 +47,18 @@ def fill(table_flat):
     for tmp_i, tmp_val in enumerate(table_flat):
 
         if tmp_val == 0:
-
             fillable_vals = [val
                              for val in range(tmp_val + 1, 10)
                              if fillable(table_flat.reshape(9, 9), tmp_i, val)]
 
             for new_val in fillable_vals:
-
                 table_flat[tmp_i] = new_val
 
-                if fill(table_flat) is not None:
+                if fill(table_flat).all():
                     break
             else:
                 table_flat[tmp_i] = 0
                 break
+    return table_flat.reshape(9, 9)
     else:
         return table_flat.reshape(9, 9)
