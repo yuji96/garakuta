@@ -31,17 +31,17 @@ def fillable(table, index, value):
 
 
 def fill(table_flat):
-    """未入力の要素に仮定を代入する,
+    """深さ優先探索により、数独を解く。
 
     Parameters
     -------
         table_flat : np.ndarray of int
-            計算中の行列。1D-array
+            数独の問題。1D-array
 
     Returns
     -------
         np.ndarray of int
-            仮定がが代入された行列。shape = (9, 9)
+            仮定が代入された行列。shape = (9, 9)
     """
 
     for tmp_i, tmp_val in enumerate(table_flat):
