@@ -3,3 +3,4 @@
 ## ox game
 ## othello
 ## suudoku
+## ten puzzle
