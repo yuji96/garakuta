@@ -3,7 +3,6 @@ from operator import add, sub, mul, truediv
 
 
 def calc_gen(raw_numbers):
-
     if len(raw_numbers) == 1:
         out = float(raw_numbers[0])
         if out.is_integer() and out > 0:
@@ -11,8 +10,9 @@ def calc_gen(raw_numbers):
         return
 
     for pair in permutations(raw_numbers, r=2):
-
-        tmp_numbers = [n for n in raw_numbers if n not in pair]
+        tmp_numbers = raw_numbers.copy()
+        for n in pair:
+            tmp_numbers.remove(n)
         for ope in [add, sub, mul, truediv]:
             try:
                 yield from calc_gen(tmp_numbers + [ope(*pair)])
@@ -21,9 +21,7 @@ def calc_gen(raw_numbers):
 
 
 def calc_func(raw_numbers):
-
     outs = []
-
     if len(raw_numbers) == 1:
         out = float(raw_numbers[0])
         if out.is_integer() and out > 0:
@@ -32,8 +30,9 @@ def calc_func(raw_numbers):
             return
 
     for pair in permutations(raw_numbers, r=2):
-
-        tmp_numbers = [n for n in raw_numbers if n not in pair]
+        tmp_numbers = raw_numbers.copy()
+        for n in pair:
+            tmp_numbers.remove(n)
         for ope in [add, sub, mul, truediv]:
             try:
                 result = calc_func(tmp_numbers + [ope(*pair)])
