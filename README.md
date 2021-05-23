@@ -1,6 +1,4 @@
-# minigames
-## janken
-## ox game
-## othello
+# algorithms
 ## suudoku
 ## ten puzzle
+## ox game
