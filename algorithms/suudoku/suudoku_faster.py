@@ -1,4 +1,5 @@
 from numba import njit, int64, bool_
+import numpy as np
 
 
 @njit(bool_(int64[:, :], int64, int64))
@@ -9,12 +10,11 @@ def fillable(table, index, value):
     block = lambda x: ((x // 3) * 3, (x // 3 + 1) * 3)
 
     same_in_areas = False
-    for area in [
-        table[row, :], table[:, col],
-        table[block(row)[0]:block(row)[1], block(col)[0]:block(col)[1]].flatten()
-    ]:
-        for i in area:
-            same_in_areas |= (i == value)
+    for i in np.hstack((
+            table[row, :], table[:, col],
+            table[block(row)[0]:block(row)[1], block(col)[0]:block(col)[1]].flatten()
+    )):
+        same_in_areas |= (i == value)
 
     return not same_in_areas
 
