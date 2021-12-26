@@ -59,4 +59,3 @@ def fill(table_flat):
                 table_flat[tmp_i] = 0
                 break
     return table_flat.reshape(9, 9)
-
