@@ -1,30 +1,17 @@
-from suudoku import fill as fill_slow
-from suudoku_faster import fill as fill_fast
-import matplotlib.pyplot as plt
-import numpy as np
 from time import time
 
-# table = [0, 0, 5, 3, 0, 0, 0, 0, 0,
-#          8, 0, 0, 0, 0, 0, 0, 2, 0,
-#          0, 7, 0, 0, 1, 0, 5, 0, 0,
-#          4, 0, 0, 0, 0, 5, 3, 0, 0,
-#          0, 1, 0, 0, 7, 0, 0, 0, 6,
-#          0, 0, 3, 2, 0, 0, 0, 8, 0,
-#          0, 6, 0, 5, 0, 0, 0, 0, 9,
-#          0, 0, 4, 0, 0, 0, 0, 3, 0,
-#          0, 0, 0, 0, 0, 9, 7, 0, 0]
+import matplotlib.pyplot as plt
+import numpy as np
 
-table =  [0, 0, 0, 8, 0, 1, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 4, 3, 0,
-          5, 0, 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 7, 0, 8, 0, 0,
-          0, 0, 0, 0, 0, 0, 1, 0, 0,
-          0, 2, 0, 0, 3, 0, 0, 0, 0,
-          6, 0, 0, 0, 0, 0, 0, 7, 5,
-          0, 0, 3, 4, 0, 0, 0, 0, 0,
-          0, 0, 0, 2, 0, 0, 6, 0, 0]
+from suudoku import fill as fill_slow
+from suudoku_faster import fill as fill_fast
+from quizes import table1 as table
 
-# fill_fast(np.array(table).copy())  # 時間測定用
+# 時間測定用
+# コンパイル時間を含めたくない場合は先に空回しする。
+# fill_fast(np.array(table).copy())
+
+print("計算開始")
 
 start = time()
 ans = fill_fast(np.array(table).copy())
