@@ -3,8 +3,8 @@ from time import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-from suudoku import fill as fill_slow
-from suudoku_faster import fill as fill_fast
+from with_numpy import fill as fill_slow
+from with_numba import fill as fill_fast
 from quizes import table1 as table
 
 # 時間測定用
