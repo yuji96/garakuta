@@ -1,0 +1,15 @@
+#!/bin/bash
+# write commit msg without quote
+msg=""
+opt=""
+
+for word in $@
+do
+  if [[ $word =~ ^--.+ ]] ; then
+    opt+=" $word"
+  else
+    msg+=" $word"
+  fi
+done
+
+exec git commit -m "$msg" $opt
