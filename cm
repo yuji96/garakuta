@@ -6,9 +6,17 @@ opt=""
 for word in $@
 do
   if [[ $word =~ ^--.+ ]] ; then
-    opt+=" $word"
+    if [[ opt = "" ]] ; then
+      opt+="$word"
+    else
+      opt+=" $word"
+    fi
   else
-    msg+=" $word"
+    if [[ msg = "" ]] ; then
+      msg+="$word"
+    else
+      msg+=" $word"
+    fi
   fi
 done
 
