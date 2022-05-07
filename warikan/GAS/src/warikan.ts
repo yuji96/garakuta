@@ -1,4 +1,4 @@
-import { zeros } from "./numpy.mjs";
+import { zeros } from "../../numpy.mjs";
 
 const print = console.log;
 

@@ -2,7 +2,7 @@
   "name": "warikan",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.ts",
+  "main": "src/_main.ts",
   "scripts": {
     "node": "./node_modules/.bin/ts-node"
   },
