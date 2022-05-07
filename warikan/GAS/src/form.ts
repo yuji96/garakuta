@@ -16,12 +16,26 @@ export namespace Forms {
     console.log(members);
 
     itemDict["支払った人"].asListItem().setChoiceValues(members);
-    const template = itemDict["X さんの購入額"];
-    for (const member of members) {
-      const itemPerMember = template.duplicate().setTitle(`${member} さんの購入額`);
-      form.moveItem(itemPerMember.getIndex(), template.getIndex());
+
+    for (const title in itemDict) {
+      if (title.includes(" さんの購入額")) {
+        form.deleteItem(itemDict[title]);
+      }
     }
-    form.deleteItem(template);
+    const sectionHeadIndex =
+      itemDict["後で個別会計したい支払い記録をする"].getIndex() + 1;
+    for (const member of members.reverse()) {
+      const item = form
+        .addTextItem()
+        .setTitle(`${member} さんの購入額`)
+        .setRequired(true)
+        // @ts-ignore
+        .setValidation(FormApp.createTextValidation().requireNumber().build());
+      form.moveItem(item.getIndex(), sectionHeadIndex);
+    }
+
+    // TODO: 確認ボタンがOKだったら回答を全削除する。
+    form.deleteAllResponses();
     console.log("complete initializing");
   }
   export function recordUniformPayment(answers: AnswerType) {
