@@ -4,26 +4,27 @@ import { Forms } from "./form";
 export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
   // const ENV = getEnv();
 
-  // const form = FormApp.getActiveForm();
+  const form = FormApp.getActiveForm();
+  const itemDict = Forms.generateItemDict(form);
   const response = event.response;
 
-  const [[_, answerType], ...answer] = response
+  const [[_, answerType], ...answers] = response
     .getItemResponses()
     .map((ir) => [ir.getItem().getTitle(), ir.getResponse()]);
   // [ [ 'なにする？', '初期化をする' ], [ '参加者を入力する', 'a b' ] ]
 
   switch (answerType) {
     case "初期化をする":
-      Forms.init(answer);
+      Forms.init(answers, itemDict);
       break;
     case "後で N 等分したい支払い記録をする":
-      Forms.recordUniformPayment(answer);
+      Forms.recordUniformPayment(answers);
       break;
     case "後で個別会計したい支払い記録をする":
-      Forms.recordIndividualPayment(answer);
+      Forms.recordIndividualPayment(answers);
       break;
     case "割り勘精算をする":
-      Forms.settle(answer);
+      Forms.settle(answers);
       break;
   }
 
