@@ -15,7 +15,7 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
 
   switch (answerType) {
     case "初期化をする":
-      Forms.init(answers, itemDict);
+      Forms.init(answers, form, itemDict);
       break;
     case "後で N 等分したい支払い記録をする":
       Forms.recordUniformPayment(answers);

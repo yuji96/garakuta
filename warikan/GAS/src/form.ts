@@ -1,19 +1,28 @@
-import { getEnv } from "./utils";
-
 type AnswerType = (string | string[] | string[][])[][];
 type ItemDict = { [title: string]: GoogleAppsScript.Forms.Item };
 
 export namespace Forms {
-  export function init(answers: AnswerType, itemDict: ItemDict) {
-    console.log("initialize");
+  export function init(
+    answers: AnswerType,
+    form: GoogleAppsScript.Forms.Form,
+    itemDict: ItemDict
+  ) {
+    console.log("start initializing");
 
     let [[title, members], ...others] = answers.filter(
       ([title, answer]) => title === "参加者を入力する"
     );
-    members = (members as string).split(/\s+/).filter((s) => s);
+    members = (members as string).trim().split(/\s+/);
     console.log(members);
 
     itemDict["支払った人"].asListItem().setChoiceValues(members);
+    const template = itemDict["X さんの購入額"];
+    for (const member of members) {
+      const itemPerMember = template.duplicate().setTitle(`${member} さんの購入額`);
+      form.moveItem(itemPerMember.getIndex(), template.getIndex());
+    }
+    form.deleteItem(template);
+    console.log("complete initializing");
   }
   export function recordUniformPayment(answers: AnswerType) {
     console.log("uniform");
@@ -32,50 +41,4 @@ export namespace Forms {
     }
     return out;
   }
-}
-
-export function copyBaseForm(folder: GoogleAppsScript.Drive.Folder) {
-  const formFiles = folder.searchFiles(
-    `mimeType="${GoogleAppsScript.Base.MimeType.GOOGLE_FORMS}"`
-  );
-  const DEBUG = getEnv() === "DEBUG";
-  if (DEBUG) {
-    console.log("in debug");
-    while (formFiles.hasNext()) {
-      const formFile = formFiles.next();
-      if (formFile.getName() === "支払い記録フォーム") {
-        return FormApp.openById(formFile.getId());
-      }
-    }
-  }
-
-  while (formFiles.hasNext()) {
-    const formFile = formFiles.next();
-    if (formFile.getName() === "base") {
-      return FormApp.openById(formFile.makeCopy("支払い記録フォーム").getId());
-    }
-  }
-  throw "base form is not found.";
-}
-
-export function generateBaseForm(
-  baseForm: GoogleAppsScript.Forms.Form,
-  members: string[]
-) {
-  for (const item of baseForm.getItems()) {
-    const title = item.getTitle();
-    switch (title) {
-      case "支払った人":
-        item.asListItem().setChoiceValues(members);
-        break;
-      case "X さんの購入額":
-        for (const member of members) {
-          const itemPerMember = item.duplicate().setTitle(`${member} さんの購入額`);
-          baseForm.moveItem(itemPerMember.getIndex(), item.getIndex());
-        }
-        baseForm.deleteItem(item);
-        break;
-    }
-  }
-  return baseForm;
 }
