@@ -2,14 +2,18 @@
   "name": "warikan",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "node": "./node_modules/.bin/ts-node"
   },
   "keywords": [],
   "author": "yuji96",
   "license": "ISC",
   "devDependencies": {
-    "@types/google-apps-script": "^1.0.47"
+    "@types/google-apps-script": "^1.0.47",
+    "ts-node": "^10.7.0"
+  },
+  "dependencies": {
+    "typescript": "^4.6.4"
   }
 }
