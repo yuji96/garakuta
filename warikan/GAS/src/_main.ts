@@ -1,8 +1,6 @@
 import { Forms } from "./form";
 
 export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
-  // const ENV = getEnv();
-
   const form = FormApp.getActiveForm();
   const folder = DriveApp.getFileById(form.getId()).getParents().next();
   const itemDict = Forms.generateItemDict(form);

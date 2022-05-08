@@ -1,3 +1,5 @@
+import { Warikan } from "./warikan";
+
 type ItemDict = { [title: string]: GoogleAppsScript.Forms.Item };
 type AnswerDict = { [title: string]: string[][] | string[] | string };
 
@@ -71,36 +73,11 @@ export namespace Forms {
       .asListItem()
       .getChoices()
       .map((choice) => choice.getValue());
-    const balance: { [title: string]: number } = {};
-    for (const member of members) {
-      balance[member] = 0;
-    }
 
-    // TODO move to warikan.ts
-    for (const response of form.getResponses()) {
-      const answerDict = generateAnswerDict(response);
-      switch (answerDict["なにする？"]) {
-        case "後で N 等分したい支払い記録をする":
-          const totalPrice = parseInt(
-            answerDict["支払った合計金額を入力する"] as string
-          );
-          const pricePerMember = totalPrice / members.length;
-          for (const member of members) {
-            if (member === answerDict["支払った人（N等分）"]) {
-              balance[member] -= totalPrice;
-            }
-            balance[member] += pricePerMember;
-          }
-          break;
-
-        case "後で個別会計したい支払い記録をする":
-          for (const member of members) {
-            const price = parseInt(answerDict[`${member} さんの購入額`] as string);
-            balance[answerDict["支払った人（個別会計）"] as string] -= price;
-            balance[member] += price;
-          }
-      }
-    }
+    const balance = Warikan.toBalance(
+      form.getResponses().map((res) => generateAnswerDict(res)),
+      members
+    );
     console.log(balance);
     itemDict["掲示板"].setHelpText(
       JSON.stringify(balance, null, 2) + "\n\n" + itemDict["掲示板"].getHelpText()

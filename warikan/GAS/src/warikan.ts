@@ -1,13 +1,36 @@
-import { zeros } from "../../numpy.mjs";
+type AnswerDict = { [title: string]: string[][] | string[] | string };
 
-const print = console.log;
+export namespace Warikan {
+  export function toBalance(answerDicts: AnswerDict[], members: string[]) {
+    const balance: { [title: string]: number } = {};
+    for (const member of members) {
+      balance[member] = 0;
+    }
 
-const members = ["A", "B", "C"];
-const array = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
-];
+    for (const answerDict of answerDicts) {
+      switch (answerDict["なにする？"]) {
+        case "後で N 等分したい支払い記録をする":
+          const totalPrice = parseInt(
+            answerDict["支払った合計金額を入力する"] as string
+          );
+          const pricePerMember = totalPrice / members.length;
+          for (const member of members) {
+            if (member === answerDict["支払った人（N等分）"]) {
+              balance[member] -= totalPrice;
+            }
+            balance[member] += pricePerMember;
+          }
+          break;
+
+        case "後で個別会計したい支払い記録をする":
+          for (const member of members) {
+            const price = parseInt(answerDict[`${member} さんの購入額`] as string);
+            balance[answerDict["支払った人（個別会計）"] as string] -= price;
+            balance[member] += price;
+          }
+      }
+    }
+  }
 
 const log = [
   ["A", 10000, null],
@@ -23,6 +46,5 @@ let account = zeros(n);
 
 print(log);
 
-// log.map(row => {
-  
-// })
+}
+}
