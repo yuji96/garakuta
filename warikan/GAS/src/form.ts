@@ -43,16 +43,17 @@ export namespace Forms {
     form.deleteAllResponses();
 
     // スプレッドシートを作成する。
-    const oldSheets = folder.searchFiles(
-      // @ts-ignore
-      `title contains "割り勘精算フォーム" and mimeType = "${MimeType.GOOGLE_SHEETS}"`
-    );
-    while (oldSheets.hasNext()) {
-      oldSheets.next().setTrashed(true);
-    }
-    const ss = SpreadsheetApp.create("割り勘精算フォーム");
-    form.setDestination(FormApp.DestinationType.SPREADSHEET, ss.getId());
-    DriveApp.getFileById(ss.getId()).moveTo(folder);
+    // TODO: スプレッドシートは削除時に前回のバックアップ用に作成するものとして、今回分は作成しない。
+    // const oldSheets = folder.searchFiles(
+    //   // @ts-ignore
+    //   `title contains "割り勘精算フォーム" and mimeType = "${MimeType.GOOGLE_SHEETS}"`
+    // );
+    // while (oldSheets.hasNext()) {
+    //   oldSheets.next().setTrashed(true);
+    // }
+    // const ss = SpreadsheetApp.create("割り勘精算フォーム");
+    // form.setDestination(FormApp.DestinationType.SPREADSHEET, ss.getId());
+    // DriveApp.getFileById(ss.getId()).moveTo(folder);
 
     console.log("complete initializing");
   }
