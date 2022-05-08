@@ -14,6 +14,7 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
   switch (answerDict["なにする？"]) {
     case "初期化をする":
       Forms.init(answerDict, form, folder, itemDict);
+      form.deleteResponse(event.response.getId());
       // TODO: 送信後の確認メッセージをわかりやすくする
       break;
     case "後で N 等分したい支払い記録をする":
@@ -24,7 +25,7 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
       break;
     // TODO:  HIDDEN に回答修正用フォームリンクを埋める
     case "割り勘精算をする":
-      Forms.settle(answers);
+      form.deleteResponse(event.response.getId());
       break;
   }
 }
