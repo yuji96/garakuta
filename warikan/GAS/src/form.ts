@@ -29,8 +29,13 @@ export namespace Forms {
         .addTextItem()
         .setTitle(`${member} さんの購入額`)
         .setRequired(true)
-        // @ts-ignore
-        .setValidation(FormApp.createTextValidation().requireNumber().build());
+        .setValidation(
+          FormApp.createTextValidation()
+            .requireTextMatchesPattern("[1-9][0-9]*")
+            // @ts-ignore
+            .setHelpText("自然数を入力してください。")
+            .build()
+        );
       form.moveItem(item.getIndex(), sectionHeadIndex);
     }
 
