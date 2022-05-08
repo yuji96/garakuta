@@ -1,9 +1,9 @@
-type AnswerType = (string | string[] | string[][])[][];
 type ItemDict = { [title: string]: GoogleAppsScript.Forms.Item };
+type AnswerDict = { [title: string]: string[][] | string[] | string };
 
 export namespace Forms {
   export function init(
-    answers: AnswerType,
+    answerDict: AnswerDict,
     form: GoogleAppsScript.Forms.Form,
     folder: GoogleAppsScript.Drive.Folder,
     itemDict: ItemDict
@@ -11,11 +11,7 @@ export namespace Forms {
     console.log("start initializing");
 
     // 参加者を取得する
-    let [[title, members], ...others] = answers.filter(
-      ([title, answer]) => title === "参加者を入力する"
-    );
-    members = (members as string).trim().split(/\s+/);
-    console.log(members);
+    const members = (answerDict["参加者を入力する"] as string).trim().split(/\s+/);
 
     // 古いフォームを削除する
     for (const title in itemDict) {
@@ -55,20 +51,32 @@ export namespace Forms {
 
     console.log("complete initializing");
   }
-  export function recordUniformPayment(answers: AnswerType) {
+  export function recordUniformPayment(answerDict: AnswerDict) {
     console.log("uniform");
+
+    const total = answerDict["支払った合計金額を入力する"];
+    console.log(total);
   }
-  export function recordIndividualPayment(answers: AnswerType) {
+  export function recordIndividualPayment(answers: AnswerDict) {
     console.log("individual");
   }
-  export function settle(answers: AnswerType) {
+  export function settle(answers: AnswerDict) {
     console.log("settle");
   }
 
   export function generateItemDict(form: GoogleAppsScript.Forms.Form) {
-    let out: ItemDict = {};
+    const out: ItemDict = {};
     for (const item of form.getItems()) {
       out[item.getTitle()] = item;
+    }
+    return out;
+  }
+  export function generateAnswerDict(
+    response: GoogleAppsScript.Forms.FormResponse
+  ) {
+    const out: AnswerDict = {};
+    for (const item of response.getItemResponses()) {
+      out[item.getItem().getTitle()] = item.getResponse();
     }
     return out;
   }

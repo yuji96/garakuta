@@ -6,17 +6,14 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
   const form = FormApp.getActiveForm();
   const folder = DriveApp.getFileById(form.getId()).getParents().next();
   const itemDict = Forms.generateItemDict(form);
-  const response = event.response;
 
   // TODO: answerDict を定義する。
-  const [[_, answerType], ...answers] = response
-    .getItemResponses()
-    .map((ir) => [ir.getItem().getTitle(), ir.getResponse()]);
-  // [ [ 'なにする？', '初期化をする' ], [ '参加者を入力する', 'a b' ] ]
 
-  switch (answerType) {
+  const answerDict = Forms.generateAnswerDict(event.response);
+
+  switch (answerDict["なにする？"]) {
     case "初期化をする":
-      Forms.init(answers, form, folder, itemDict);
+      Forms.init(answerDict, form, folder, itemDict);
       break;
     case "後で N 等分したい支払い記録をする":
       Forms.recordUniformPayment(answers);
