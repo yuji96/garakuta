@@ -64,8 +64,47 @@ export namespace Forms {
   export function recordIndividualPayment(answerDict: AnswerDict) {
     console.log("individual");
   }
-  export function settle(answers: AnswerDict) {
+  export function settle(form: GoogleAppsScript.Forms.Form, itemDict: ItemDict) {
     console.log("settle");
+
+    const members = itemDict["支払った人（N等分）"]
+      .asListItem()
+      .getChoices()
+      .map((choice) => choice.getValue());
+    const balance: { [title: string]: number } = {};
+    for (const member of members) {
+      balance[member] = 0;
+    }
+
+    // TODO move to warikan.ts
+    for (const response of form.getResponses()) {
+      const answerDict = generateAnswerDict(response);
+      switch (answerDict["なにする？"]) {
+        case "後で N 等分したい支払い記録をする":
+          const totalPrice = parseInt(
+            answerDict["支払った合計金額を入力する"] as string
+          );
+          const pricePerMember = totalPrice / members.length;
+          for (const member of members) {
+            if (member === answerDict["支払った人（N等分）"]) {
+              balance[member] -= totalPrice;
+            }
+            balance[member] += pricePerMember;
+          }
+          break;
+
+        case "後で個別会計したい支払い記録をする":
+          for (const member of members) {
+            const price = parseInt(answerDict[`${member} さんの購入額`] as string);
+            balance[answerDict["支払った人（個別会計）"] as string] -= price;
+            balance[member] += price;
+          }
+      }
+    }
+    console.log(balance);
+    itemDict["掲示板"].setHelpText(
+      JSON.stringify(balance, null, 2) + "\n\n" + itemDict["掲示板"].getHelpText()
+    );
   }
 
   export function generateItemDict(form: GoogleAppsScript.Forms.Form) {

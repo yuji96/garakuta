@@ -25,6 +25,7 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
       break;
     // TODO:  HIDDEN に回答修正用フォームリンクを埋める
     case "割り勘精算をする":
+      Forms.settle(form, itemDict);
       form.deleteResponse(event.response.getId());
       break;
   }
