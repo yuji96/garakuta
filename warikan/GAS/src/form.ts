@@ -73,15 +73,15 @@ export namespace Forms {
       .asListItem()
       .getChoices()
       .map((choice) => choice.getValue());
-
     const balance = Warikan.toBalance(
       form.getResponses().map((res) => generateAnswerDict(res)),
       members
     );
     console.log(balance);
-    itemDict["掲示板"].setHelpText(
-      JSON.stringify(balance, null, 2) + "\n\n" + itemDict["掲示板"].getHelpText()
-    );
+
+    const result = Warikan.account(balance);
+    console.log(result);
+    itemDict["掲示板"].setHelpText(result);
   }
 
   export function generateItemDict(form: GoogleAppsScript.Forms.Form) {
