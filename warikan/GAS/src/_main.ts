@@ -14,13 +14,15 @@ export function main(event: GoogleAppsScript.Events.FormsOnFormSubmit) {
   switch (answerDict["なにする？"]) {
     case "初期化をする":
       Forms.init(answerDict, form, folder, itemDict);
+      // TODO: 送信後の確認メッセージをわかりやすくする
       break;
     case "後で N 等分したい支払い記録をする":
-      Forms.recordUniformPayment(answers);
+      Forms.recordUniformPayment(answerDict);
       break;
     case "後で個別会計したい支払い記録をする":
-      Forms.recordIndividualPayment(answers);
+      Forms.recordIndividualPayment(answerDict);
       break;
+    // TODO:  HIDDEN に回答修正用フォームリンクを埋める
     case "割り勘精算をする":
       Forms.settle(answers);
       break;

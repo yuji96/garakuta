@@ -21,9 +21,10 @@ export namespace Forms {
     }
 
     // 参加者を設定する
-    itemDict["支払った人"].asListItem().setChoiceValues(members);
+    itemDict["支払った人（N等分）"].asListItem().setChoiceValues(members);
+    itemDict["支払った人（個別会計）"].asListItem().setChoiceValues(members);
     const sectionHeadIndex =
-      itemDict["後で個別会計したい支払い記録をする"].getIndex() + 1;
+      itemDict["後で個別会計したい支払い記録をする"].getIndex();
     for (const member of members.reverse()) {
       const item = form
         .addTextItem()
@@ -36,7 +37,7 @@ export namespace Forms {
             .setHelpText("自然数を入力してください。")
             .build()
         );
-      form.moveItem(item.getIndex(), sectionHeadIndex);
+      form.moveItem(item.getIndex(), sectionHeadIndex + 3);
     }
 
     // TODO: 確認ボタンがOKだったら回答を全削除する。
@@ -59,11 +60,8 @@ export namespace Forms {
   }
   export function recordUniformPayment(answerDict: AnswerDict) {
     console.log("uniform");
-
-    const total = answerDict["支払った合計金額を入力する"];
-    console.log(total);
   }
-  export function recordIndividualPayment(answers: AnswerDict) {
+  export function recordIndividualPayment(answerDict: AnswerDict) {
     console.log("individual");
   }
   export function settle(answers: AnswerDict) {
