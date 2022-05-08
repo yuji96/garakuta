@@ -1,6 +1,5 @@
-import json
 import math
-from typing import List, NamedTuple
+from typing import NamedTuple
 
 import pandas as pd
 
@@ -19,23 +18,9 @@ def round(x, unit=100):
     return int((x + 0.5 * offset) // offset * offset)
 
 
-def calc_balance(members: List[str]):
-    transition_df = pd.DataFrame(data=0, index=members, columns=members)
-    for row in log_df.itertuples():
-        row: Row
-        if pd.isna(row.note):
-            transition_df.loc[row.payer] += row.amount / len(members)
-        else:
-            transition_df.loc[row.payer] += pd.Series(json.loads(row.note))
-
-    borrowing = transition_df.sum(axis="rows")
-    lending = transition_df.sum(axis="columns")
-    balance = borrowing - lending
-    return balance
-
-
-def account(initial_balance: DF, pay_unit=100):
+def account(initial_balance: pd.Series, pay_unit=100):
     balance = initial_balance.copy()
+    members = initial_balance.index
     account_df = pd.DataFrame(data=0, index=members, columns=members)
 
     while True:
@@ -57,13 +42,3 @@ def account(initial_balance: DF, pay_unit=100):
         balance[lowest_member] += round_pay
 
     return account_df, balance
-
-
-if __name__ == "__main__":
-    log_df = pd.read_csv("data.csv")
-    members = list("ABCD")
-
-    initial_balance = calc_balance(list("ABCD"))
-    account_df, balance = account(initial_balance)
-    print(pd.DataFrame(dict(init=initial_balance, result=balance)))
-    print(account_df, end="\n\n")
