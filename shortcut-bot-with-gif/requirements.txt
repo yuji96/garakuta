@@ -1,0 +1,4 @@
+Jinja2
+pandas
+python-dotenv
+python-twitter
