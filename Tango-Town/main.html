@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script src="./js/render.js"></script>
+    <script src="./js/event.js" defer></script>
+    <title>丹後町</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <main>
+      <h1>丹後町</h1>
+      <textarea id="paste-text" style="display: none;"></textarea>
+    </main>
+    <footer>
+      <div>
+        Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
+        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      </div>
+    </footer>
+    <div id="template">
+      <div class="page-wrapper">
+        <h2><a class="page-title" href="${pageUrl}">${page["title"]}</a></h2>
+        <dl>
+          <div class="term-card template">
+            <div class="term-and-def">
+              <dt>${term}</dt>
+              <dd>${page["words"][term]}</dd>
+            </div>
+            <button class="change" type="button">
+              <img src="./icons/edit.png" />
+            </button>
+            <button class="complete" type="button" style="display: none">
+              <img src="./icons/check.png" />
+            </button>
+            <button class="delete" type="button">
+              <img src="./icons/trash.png" />
+            </button>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </body>
+</html>
